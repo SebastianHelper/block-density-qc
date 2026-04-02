@@ -22,16 +22,24 @@ function classify(density, blockType) {
   return density > min ? "BESTANDEN" : "NICHT BESTANDEN";
 }
 
-// Stepper state (eine Nachkommastelle)
-const state = { weight: 13.0, height: 21.5 };
+// Zustand (eine Nachkommastelle)
+const state = { blockType: "I2", weight: 13.0, height: 21.5 };
 
 function updateDisplays() {
-  document.getElementById("weight-val").textContent = state.weight.toFixed(1);
-  document.getElementById("height-val").textContent = state.height.toFixed(1);
+  document.getElementById("weight-val").textContent = state.weight.toFixed(1).replace(".", ",");
+  document.getElementById("height-val").textContent = state.height.toFixed(1).replace(".", ",");
+}
+
+function updateTypeUI() {
+  document.querySelectorAll(".type-btn").forEach((btn) => {
+    const isActive = btn.dataset.type === state.blockType;
+    btn.classList.toggle("active", isActive);
+    btn.setAttribute("aria-checked", isActive ? "true" : "false");
+  });
 }
 
 function compute() {
-  const blockType = document.getElementById("blockType").value;
+  const blockType = state.blockType;
   const result = document.getElementById("result");
 
   if (!SETTINGS.factors[blockType] || !SETTINGS.minDensity[blockType]) {
@@ -47,7 +55,7 @@ function compute() {
   result.className = `result ${status === "BESTANDEN" ? "pass" : "fail"}`;
   result.innerHTML =
     `<div class="status-badge">${status}</div>` +
-    `<div class="result-details">Dichte: ${density.toFixed(3).replace('.', ',')} &bull; Minimum: ${min
+    `<div class="result-details">Dichte: ${density.toFixed(3).replace('.', ',')} · Minimum: ${min
       .toFixed(3)
       .replace('.', ',')}</div>`;
 }
@@ -63,8 +71,14 @@ document.querySelectorAll(".step-btn").forEach((btn) => {
   });
 });
 
-document.getElementById("blockType").addEventListener("change", compute);
+document.querySelectorAll(".type-btn").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    state.blockType = btn.dataset.type;
+    updateTypeUI();
+    compute();
+  });
+});
 
-// Initial render
 updateDisplays();
+updateTypeUI();
 compute();

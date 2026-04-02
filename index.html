@@ -10,16 +10,23 @@
     <main class="card">
       <div class="header">
         <h1>Dichte Rechner</h1>
-        <p class="muted">I2 / I3 Qualitätskontrolle</p>
+        <p class="muted">Sembla Qualitätskontrolle · I2 / I3</p>
       </div>
 
-      <div class="field">
-        <label for="blockType">Steintyp</label>
-        <select id="blockType">
-          <option value="I2">I2</option>
-          <option value="I3">I3</option>
-        </select>
-      </div>
+      <section class="field">
+        <label>Steintyp wählen</label>
+        <div class="type-grid" role="radiogroup" aria-label="Steintyp">
+          <button type="button" class="type-btn active" data-type="I2" role="radio" aria-checked="true">
+            <img src="assets/i2.jpg" alt="DOUBLE Stein (I2)" loading="lazy" />
+            <span>DOUBLE · I2</span>
+          </button>
+
+          <button type="button" class="type-btn" data-type="I3" role="radio" aria-checked="false">
+            <img src="assets/i3.jpg" alt="TRIPPLE Stein (I3)" loading="lazy" />
+            <span>TRIPPLE · I3</span>
+          </button>
+        </div>
+      </section>
 
       <div class="field">
         <label>Gewicht (kg)</label>
@@ -42,6 +49,6 @@
       <section id="result" class="result" aria-live="polite"></section>
     </main>
 
-    <script src="app.js?v=20260402c"></script>
+    <script src="app.js?v=20260402d"></script>
   </body>
 </html>
