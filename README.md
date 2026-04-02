@@ -5,16 +5,18 @@ Simple one-page GitHub Pages app to calculate block density for quality control.
 ## Inputs
 - Block type: `I2` or `I3`
 - Weight in kilograms
-- Height in centimeters
+- Height in centimeters (converted to mm internally)
 
-## Configure formula
-Current `app.js` includes placeholder factor and limit values.
+## Formula
+`Steindichte = Steingewicht [kg] / (Steinhöhe [mm] * Faktor)`
 
-Update these in `SETTINGS`:
-- `factors.I2`
-- `factors.I3`
-- `densityLimits.I2`
-- `densityLimits.I3`
+Factors:
+- I2: `0.031`
+- I3: `0.046`
+
+Minimum density to pass:
+- I2: `> 1.387`
+- I3: `> 1.358`
 
 ## Run locally
 Open `index.html` directly in a browser.

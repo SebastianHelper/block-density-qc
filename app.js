@@ -1,38 +1,25 @@
 const SETTINGS = {
-  // Replace these placeholders with exact values from the QC sheet.
   factors: {
-    I2: null,
-    I3: null,
+    // Steindichte = Steingewicht [kg] / (Steinhöhe [mm] * Faktor)
+    I2: 0.031,
+    I3: 0.046,
   },
-  densityLimits: {
-    I2: { min: null, max: null },
-    I3: { min: null, max: null },
+  minDensity: {
+    // Mindestdichte zum Bestehen
+    I2: 1.387,
+    I3: 1.358,
   },
 };
 
-function hasValidConfigFor(blockType) {
-  const factor = SETTINGS.factors[blockType];
-  const limits = SETTINGS.densityLimits[blockType];
-
-  return (
-    Number.isFinite(factor) &&
-    Number.isFinite(limits?.min) &&
-    Number.isFinite(limits?.max) &&
-    limits.min < limits.max
-  );
-}
-
 function computeDensity(weightKg, heightCm, blockType) {
   const factor = SETTINGS.factors[blockType];
-
-  // Placeholder formula until values from QC sheet are locked:
-  // density = (weight / height) * factor
-  return (weightKg / heightCm) * factor;
+  const heightMm = heightCm * 10;
+  return weightKg / (heightMm * factor);
 }
 
 function classify(density, blockType) {
-  const { min, max } = SETTINGS.densityLimits[blockType];
-  return density >= min && density <= max ? "PASS" : "FAIL";
+  const min = SETTINGS.minDensity[blockType];
+  return density > min ? "PASS" : "FAIL";
 }
 
 document.getElementById("qc-form").addEventListener("submit", (event) => {
@@ -49,16 +36,10 @@ document.getElementById("qc-form").addEventListener("submit", (event) => {
     return;
   }
 
-  if (!hasValidConfigFor(blockType)) {
-    result.className = "result fail";
-    result.innerHTML =
-      "<strong>Configuration missing:</strong> QC constants for this block type are not set yet.";
-    return;
-  }
-
   const density = computeDensity(weight, height, blockType);
   const status = classify(density, blockType);
+  const min = SETTINGS.minDensity[blockType];
 
   result.className = `result ${status === "PASS" ? "pass" : "fail"}`;
-  result.innerHTML = `<strong>Density:</strong> ${density.toFixed(3)}<br /><strong>QC:</strong> ${status}`;
+  result.innerHTML = `<strong>Density:</strong> ${density.toFixed(3)}<br /><strong>Minimum:</strong> ${min.toFixed(3)}<br /><strong>QC:</strong> ${status}`;
 });
