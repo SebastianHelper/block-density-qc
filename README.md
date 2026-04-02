@@ -18,6 +18,9 @@ Minimum density to pass:
 - I2: `> 1.387`
 - I3: `> 1.358`
 
+## Controls
+Weight and height are adjusted with **−/+** buttons (0.1 step, one decimal place) — no keyboard entry required. The result updates instantly on every change. Designed mobile-first; fits on a single phone screen.
+
 ## Run locally
 Open `index.html` directly in a browser.
 

@@ -22,19 +22,17 @@ function classify(density, blockType) {
   return density > min ? "PASS" : "FAIL";
 }
 
-document.getElementById("qc-form").addEventListener("submit", (event) => {
-  event.preventDefault();
+// Stepper state (one decimal place throughout)
+const state = { weight: 10.0, height: 20.0 };
 
+function updateDisplays() {
+  document.getElementById("weight-val").textContent = state.weight.toFixed(1);
+  document.getElementById("height-val").textContent = state.height.toFixed(1);
+}
+
+function compute() {
   const blockType = document.getElementById("blockType").value;
-  const weight = Number(document.getElementById("weight").value);
-  const height = Number(document.getElementById("height").value);
   const result = document.getElementById("result");
-
-  if (!Number.isFinite(weight) || !Number.isFinite(height) || height <= 0) {
-    result.textContent = "Please enter valid positive numbers.";
-    result.className = "result fail";
-    return;
-  }
 
   if (!SETTINGS.factors[blockType] || !SETTINGS.minDensity[blockType]) {
     result.textContent = `Unknown block type: ${blockType}. Select I2 or I3.`;
@@ -42,10 +40,29 @@ document.getElementById("qc-form").addEventListener("submit", (event) => {
     return;
   }
 
-  const density = computeDensity(weight, height, blockType);
+  const density = computeDensity(state.weight, state.height, blockType);
   const status = classify(density, blockType);
   const min = SETTINGS.minDensity[blockType];
 
   result.className = `result ${status === "PASS" ? "pass" : "fail"}`;
-  result.innerHTML = `<strong>Density:</strong> ${density.toFixed(3)}<br /><strong>Minimum:</strong> ${min.toFixed(3)}<br /><strong>QC:</strong> ${status}`;
+  result.innerHTML =
+    `<div class="status-badge">${status}</div>` +
+    `<div class="result-details">Density: ${density.toFixed(3)} &bull; Min: ${min.toFixed(3)}</div>`;
+}
+
+document.querySelectorAll(".step-btn").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    const field = btn.dataset.field;
+    const dir = Number(btn.dataset.dir);
+    state[field] = Math.round((state[field] + dir * 0.1) * 10) / 10;
+    if (state[field] < 0.1) state[field] = 0.1;
+    updateDisplays();
+    compute();
+  });
 });
+
+document.getElementById("blockType").addEventListener("change", compute);
+
+// Initial render
+updateDisplays();
+compute();

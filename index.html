@@ -8,35 +8,40 @@
   </head>
   <body>
     <main class="card">
-      <h1>Block Density QC</h1>
-      <p class="muted">One-page calculator for I2 / I3 quality control.</p>
+      <div class="header">
+        <h1>Block Density QC</h1>
+        <p class="muted">I2 / I3 quality control</p>
+      </div>
 
-      <form id="qc-form">
+      <div class="field">
         <label for="blockType">Block type</label>
-        <select id="blockType" required>
+        <select id="blockType">
           <option value="I2">I2</option>
           <option value="I3">I3</option>
         </select>
+      </div>
 
-        <label for="weight">Weight (kg)</label>
-        <input id="weight" type="number" min="0" step="0.001" required />
+      <div class="field">
+        <label>Weight (kg)</label>
+        <div class="stepper">
+          <button type="button" class="step-btn" data-field="weight" data-dir="-1">−</button>
+          <span id="weight-val" class="step-val">10.0</span>
+          <button type="button" class="step-btn" data-field="weight" data-dir="1">+</button>
+        </div>
+      </div>
 
-        <label for="height">Height (cm)</label>
-        <input id="height" type="number" min="0" step="0.01" required />
-
-        <button type="submit">Compute</button>
-      </form>
+      <div class="field">
+        <label>Height (cm)</label>
+        <div class="stepper">
+          <button type="button" class="step-btn" data-field="height" data-dir="-1">−</button>
+          <span id="height-val" class="step-val">20.0</span>
+          <button type="button" class="step-btn" data-field="height" data-dir="1">+</button>
+        </div>
+      </div>
 
       <section id="result" class="result" aria-live="polite"></section>
-
-      <details>
-        <summary>Formula settings</summary>
-        <p class="muted">
-          Update factors/limits in <code>app.js</code> once you confirm values from your QC sheet.
-        </p>
-      </details>
     </main>
 
-    <script src="app.js?v=20260402"></script>
+    <script src="app.js?v=20260402b"></script>
   </body>
 </html>
