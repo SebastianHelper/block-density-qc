@@ -19,11 +19,11 @@ function computeDensity(weightKg, heightCm, blockType) {
 
 function classify(density, blockType) {
   const min = SETTINGS.minDensity[blockType];
-  return density > min ? "PASS" : "FAIL";
+  return density > min ? "BESTANDEN" : "NICHT BESTANDEN";
 }
 
-// Stepper state (one decimal place throughout)
-const state = { weight: 10.0, height: 20.0 };
+// Stepper state (eine Nachkommastelle)
+const state = { weight: 13.0, height: 21.5 };
 
 function updateDisplays() {
   document.getElementById("weight-val").textContent = state.weight.toFixed(1);
@@ -35,7 +35,7 @@ function compute() {
   const result = document.getElementById("result");
 
   if (!SETTINGS.factors[blockType] || !SETTINGS.minDensity[blockType]) {
-    result.textContent = `Unknown block type: ${blockType}. Select I2 or I3.`;
+    result.textContent = `Unbekannter Steintyp: ${blockType}. Bitte I2 oder I3 wählen.`;
     result.className = "result fail";
     return;
   }
@@ -44,10 +44,12 @@ function compute() {
   const status = classify(density, blockType);
   const min = SETTINGS.minDensity[blockType];
 
-  result.className = `result ${status === "PASS" ? "pass" : "fail"}`;
+  result.className = `result ${status === "BESTANDEN" ? "pass" : "fail"}`;
   result.innerHTML =
     `<div class="status-badge">${status}</div>` +
-    `<div class="result-details">Density: ${density.toFixed(3)} &bull; Min: ${min.toFixed(3)}</div>`;
+    `<div class="result-details">Dichte: ${density.toFixed(3).replace('.', ',')} &bull; Minimum: ${min
+      .toFixed(3)
+      .replace('.', ',')}</div>`;
 }
 
 document.querySelectorAll(".step-btn").forEach((btn) => {
