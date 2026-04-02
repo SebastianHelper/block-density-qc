@@ -1,14 +1,26 @@
 const SETTINGS = {
-  // TODO: replace with exact sheet values
+  // Replace these placeholders with exact values from the QC sheet.
   factors: {
-    I2: 1,
-    I3: 1,
+    I2: null,
+    I3: null,
   },
   densityLimits: {
-    I2: { min: 0, max: Infinity },
-    I3: { min: 0, max: Infinity },
+    I2: { min: null, max: null },
+    I3: { min: null, max: null },
   },
 };
+
+function hasValidConfigFor(blockType) {
+  const factor = SETTINGS.factors[blockType];
+  const limits = SETTINGS.densityLimits[blockType];
+
+  return (
+    Number.isFinite(factor) &&
+    Number.isFinite(limits?.min) &&
+    Number.isFinite(limits?.max) &&
+    limits.min < limits.max
+  );
+}
 
 function computeDensity(weightKg, heightCm, blockType) {
   const factor = SETTINGS.factors[blockType];
@@ -34,6 +46,13 @@ document.getElementById("qc-form").addEventListener("submit", (event) => {
   if (!Number.isFinite(weight) || !Number.isFinite(height) || height <= 0) {
     result.textContent = "Please enter valid positive numbers.";
     result.className = "result fail";
+    return;
+  }
+
+  if (!hasValidConfigFor(blockType)) {
+    result.className = "result fail";
+    result.innerHTML =
+      "<strong>Configuration missing:</strong> QC constants for this block type are not set yet.";
     return;
   }
 
