@@ -36,6 +36,12 @@ document.getElementById("qc-form").addEventListener("submit", (event) => {
     return;
   }
 
+  if (!SETTINGS.factors[blockType] || !SETTINGS.minDensity[blockType]) {
+    result.textContent = `Unknown block type: ${blockType}. Select I2 or I3.`;
+    result.className = "result fail";
+    return;
+  }
+
   const density = computeDensity(weight, height, blockType);
   const status = classify(density, blockType);
   const min = SETTINGS.minDensity[blockType];
