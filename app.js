@@ -6,8 +6,8 @@ const SETTINGS = {
   },
   minDensity: {
     // Mindestdichte zum Bestehen
-    I2: 1.387,
-    I3: 1.358,
+    I2: 1.34,
+    I3: 1.28,
   },
 };
 
